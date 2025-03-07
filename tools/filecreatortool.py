@@ -21,10 +21,12 @@ class FileCreatorTool(BaseTool):
     2. For multiple files:
        {
            "files": [
+
                {
                    "path": "path/to/file1.txt",
                    "content": "content for file 1"
-               },
+               }
+               ,
                {
                    "path": "path/to/file2.txt",
                    "content": "content for file 2"
@@ -111,8 +113,12 @@ class FileCreatorTool(BaseTool):
             str: JSON string containing results of file creation operations
         """
         files = kwargs.get('files', [])
+
+
         if isinstance(files, dict):
             files = [files]
+
+        
 
         results = []
         for file_spec in files:

@@ -4,6 +4,7 @@ import os
 from werkzeug.utils import secure_filename
 import base64
 from config import Config
+from vercel_utils import *
 
 app = Flask(__name__, static_folder='static')
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -52,6 +53,17 @@ def chat():
     try:
         # Handle the chat message with the appropriate content
         response = assistant.chat(message_content)
+
+        # Trigger Vercel deployment
+        deploy_url = deploy_to_vercel('xwAGSIcz23njxip9tr54vIhj','ruchi_indian_kitchen',"./ruchi_indian_kitchen")
+        
+        if deploy_url:
+            deployment_message = f"✅ Deployment successful! You can view your website at: {deploy_url}"
+        else:
+            deployment_message = "❌ Deployment failed. Please try again later."
+        
+        # Include the deployment message in the assistant's response
+        response += "\n" + deployment_message
         
         # Get token usage from assistant
         token_usage = {
@@ -72,14 +84,14 @@ def chat():
                                 break
                     if tool_name:
                         break
-        
+
         return jsonify({
             'response': response,
             'thinking': False,
             'tool_name': tool_name,
             'token_usage': token_usage
         })
-        
+    
     except Exception as e:
         return jsonify({
             'response': f"Error: {str(e)}",
@@ -127,4 +139,4 @@ def reset():
     return jsonify({'status': 'success'})
 
 if __name__ == '__main__':
-    app.run(debug=False) 
+    app.run(debug=False)

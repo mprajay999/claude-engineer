@@ -52,25 +52,6 @@ class Assistant:
 
         self.tools = self._load_tools()
 
-    def _execute_uv_install(self, package_name: str) -> bool:
-        """
-        Execute the uvpackagemanager tool directly to install the missing package.
-        Returns True if installation seems successful (no errors in output), otherwise False.
-        """
-        class ToolUseMock:
-            name = "uvpackagemanager"
-            input = {
-                "command": "install",
-                "packages": [package_name]
-            }
-
-        result = self._execute_tool(ToolUseMock())
-        if "Error" not in result and "failed" not in result.lower():
-            self.console.print("[green]The package was installed successfully.[/green]")
-            return True
-        else:
-            self.console.print(f"[red]Failed to install {package_name}. Output:[/red] {result}")
-            return False
 
     def _load_tools(self) -> List[Dict[str, Any]]:
         """
